@@ -16,8 +16,12 @@ public class FlipperController : MonoBehaviour {
 
     public float touchpos;
 
-	// Use this for initialization
-	void Start () {
+    private int leftFingerId;
+
+    private int rightFingerId;
+
+    // Use this for initialization
+    void Start () {
 
         this.myHingeJoint = GetComponent<HingeJoint>();
 
@@ -29,61 +33,41 @@ public class FlipperController : MonoBehaviour {
     void Update()
     {
 
-        if (Input.touchCount > 0) {
-
-            Touch t = Input.GetTouch(0);
-
-            touchpos = Input.GetTouch(0).position.x;
-
-            switch (t.phase)
-            {
-
-                case TouchPhase.Began:
-                   if(touchpos<Screen.width*0.5f && tag == "LeftFripperTag")
-                    {
-                       
-                            SetAngle(this.flickAngle);
-                        
-                    }
-                    else if(touchpos<Screen.width-Screen.width*0.5f && tag == "RightFripperTag")
-                    {
-
-                            SetAngle(this.flickAngle);
-
-                    }
-                    break;
-
-                case TouchPhase.Ended:
-
-                    SetAngle(this.defaultAngle);
-
-                    break;
-            }
-
-        }else if (Input.touchCount == 2)
+        for (int i = 0; i < Input.touchCount; i++)
         {
 
-            Touch t = Input.GetTouch(0);
-
-            touchpos = Input.GetTouch(0).position.x;
+            Touch t = Input.GetTouch(i);
 
             switch (t.phase)
             {
 
                 case TouchPhase.Began:
 
-                    SetAngle(this.flickAngle);
-
-                break;
-
-                case TouchPhase.Ended:
-
-                    SetAngle(this.defaultAngle);
+                    if (t.position.x < Screen.width * 0.5f && tag == "LeftFripperTag")
+                    {
+                        SetAngle(this.flickAngle);
+                        leftFingerId = t.fingerId;
+                    }
+                    else if (t.position.x > Screen.width * 0.5f && tag == "RightFripperTag")
+                    {
+                        SetAngle(this.flickAngle);
+                        rightFingerId = t.fingerId;
+                    }
 
                     break;
 
-            }
+                case TouchPhase.Ended:
+                    if (t.fingerId == leftFingerId && tag == "LeftFripperTag")
+                    {
+                        SetAngle(this.defaultAngle);
+                    }
+                    else if (t.fingerId == rightFingerId && tag == "RightFripperTag")
+                    {
+                        SetAngle(this.defaultAngle);
+                    }
 
+                    break;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) && tag == "LeftFripperTag")
