@@ -39,21 +39,16 @@ public class FlipperController : MonoBehaviour {
             {
 
                 case TouchPhase.Began:
-                   if(touchpos<Screen.width*0.5f)
+                   if(touchpos<Screen.width*0.5f && tag == "LeftFripperTag")
                     {
-                        if (Input.GetKeyDown(KeyCode.LeftArrow) && tag == "LeftFripperTag")
-                        {
+                       
                             SetAngle(this.flickAngle);
-                        }
+                        
                     }
-                    else
+                    else if(touchpos<Screen.width-Screen.width*0.5f && tag == "RightFripperTag")
                     {
-                        if (Input.GetKeyDown(KeyCode.RightArrow) && tag == "RightFripperTag")
-                        {
 
                             SetAngle(this.flickAngle);
-
-                        }
 
                     }
                     break;
@@ -63,6 +58,30 @@ public class FlipperController : MonoBehaviour {
                     SetAngle(this.defaultAngle);
 
                     break;
+            }
+
+        }else if (Input.touchCount == 2)
+        {
+
+            Touch t = Input.GetTouch(0);
+
+            touchpos = Input.GetTouch(0).position.x;
+
+            switch (t.phase)
+            {
+
+                case TouchPhase.Began:
+
+                    SetAngle(this.flickAngle);
+
+                break;
+
+                case TouchPhase.Ended:
+
+                    SetAngle(this.defaultAngle);
+
+                    break;
+
             }
 
         }
